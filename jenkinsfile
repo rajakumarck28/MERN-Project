@@ -1,0 +1,66 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKERHUB_CREDENTIALS = 'dockerhub-creds'
+        IMAGE_BACKEND = 'akshayck9480/an-backend'
+        IMAGE_FRONTEND = 'akshay9480/be-frontend'
+        EC2_HOST = 'root@ip'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                url: ''https://github.com/rajakumarck28/MEAN-MongoDB-Express-Angular-Node.js-application..git"
+            }
+        }
+
+        stage('Build Backend Image') {
+            steps {
+                sh 'docker build -t $IMAGE_BACKEND:latest ./backend'
+            }
+        }
+
+        stage('Build Frontend Image') {
+            steps {
+                sh 'docker build -t $IMAGE_FRONTEND:latest ./frontend'
+            }
+        }
+
+        stage('Login to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                }
+            }
+        }
+
+        stage('Push Images') {
+            steps {
+                sh 'docker push $IMAGE_BACKEND:latest'
+                sh 'docker push $IMAGE_FRONTEND:latest'
+            }
+        }
+
+        stage('Deploy to EC2') {
+            steps {
+                sshagent(['ec2-ssh']) {
+                    sh """
+                    ssh -o StrictHostKeyChecking=no $EC2_HOST '
+                    cd mean-crud-docker-cicd &&
+                    docker-compose down &&
+                    docker-compose pull &&
+                    docker-compose up -d
+                    '
+                    """
+                }
+            }
+        }
+    }
+}
