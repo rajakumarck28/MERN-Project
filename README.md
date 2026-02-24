@@ -16,3 +16,5 @@ install plugins docker,git,pipeline
 add credential like dockehub,ssh of ec2
 create an pipeline job 
 any change in github automatically change in website
+
+To be honest -----i take some help from Chatgpt 
