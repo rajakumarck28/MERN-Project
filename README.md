@@ -28,4 +28,3 @@ step-2-----integrate git,docker,jenkins
 
 >any change in github automatically change in website
 
-*To be honest -----i take some help from Chatgpt because im still learning 
