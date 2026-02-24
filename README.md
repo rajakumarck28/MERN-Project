@@ -1,3 +1,4 @@
+step1-docker
 from google drive download the project related files
 push to GitHub account
 create an serverin aws ----clone repository to server
@@ -9,5 +10,9 @@ check ip------content available
 
 
 step-2-----integrate git,docker,jenkins
-create an server in aws -----install jenkins
+
+create an server in aws -----install jenkins 
 install plugins docker,git,pipeline
+add credential like dockehub,ssh of ec2
+create an pipeline job 
+any change in github automatically change in website
